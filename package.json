@@ -1,0 +1,20 @@
+{
+  "name": "data-processing-cli",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/FierceSloth/data-processing-cli#readme",
+  "bugs": {
+    "url": "https://github.com/FierceSloth/data-processing-cli/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FierceSloth/data-processing-cli.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}
