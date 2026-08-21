@@ -1,5 +1,7 @@
 import process from 'node:process';
 import readline from 'node:readline';
+import { cdCommand, lsCommand, upCommand } from './navigation.js';
+import { argParser } from './utils/argParser.js';
 
 export function startRepl(state) {
   const rl = readline.createInterface({
@@ -9,24 +11,39 @@ export function startRepl(state) {
   });
   rl.prompt();
 
-  rl.on('line', (input) => {
-    const command = input.trim();
+  rl.on('line', async (input) => {
+    const { command, args, flags } = argParser(input);
 
     if (!command) {
       rl.prompt();
       return;
     }
 
-    switch (command) {
-      case 'todo':
-        console.log(`In Progress...`);
-        break;
-      case '.exit':
-        rl.close();
-        break;
-      default:
-        console.log('Invalid input');
+    try {
+      switch (command) {
+        case 'up':
+          state.currentDir = upCommand(state.currentDir);
+          break;
+        case 'cd':
+          state.currentDir = await cdCommand(state.currentDir, args[0]);
+          break;
+        case 'ls':
+          console.log(await lsCommand(state.currentDir));
+          break;
+        case '.exit':
+          rl.close();
+          return;
+        default:
+          console.log('Invalid input');
+          rl.prompt();
+          return;
+      }
+
+      console.log(`You are currently in ${state.currentDir}`);
+    } catch (e) {
+      console.log(`Operation failed. ${e}`);
     }
+
     rl.prompt();
   });
 
