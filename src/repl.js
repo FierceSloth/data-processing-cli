@@ -1,5 +1,6 @@
 import process from 'node:process';
 import readline from 'node:readline';
+import { countCommand } from './commands/count.js';
 import { cdCommand, lsCommand, upCommand } from './navigation.js';
 import { argParser } from './utils/argParser.js';
 
@@ -29,6 +30,9 @@ export function startRepl(state) {
           break;
         case 'ls':
           console.log(await lsCommand(state.currentDir));
+          break;
+        case 'count':
+          console.log(await countCommand(state.currentDir, flags.input));
           break;
         case '.exit':
           rl.close();
