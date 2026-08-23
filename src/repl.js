@@ -1,8 +1,10 @@
 import process from 'node:process';
 import readline from 'node:readline';
 import { countCommand } from './commands/count.js';
+import { hashCommand } from './commands/hash.js';
 import { cdCommand, lsCommand, upCommand } from './navigation.js';
 import { argParser } from './utils/argParser.js';
+import { hashCompareCommand } from './commands/hashCompare.js';
 
 export function startRepl(state) {
   const rl = readline.createInterface({
@@ -21,6 +23,8 @@ export function startRepl(state) {
     }
 
     try {
+      const { input, algorithm, hash, save } = flags;
+
       switch (command) {
         case 'up':
           state.currentDir = upCommand(state.currentDir);
@@ -32,7 +36,17 @@ export function startRepl(state) {
           console.log(await lsCommand(state.currentDir));
           break;
         case 'count':
-          console.log(await countCommand(state.currentDir, flags.input));
+          console.log(await countCommand(state.currentDir, input));
+          break;
+        case 'hash':
+          console.log(
+            await hashCommand(state.currentDir, input, algorithm, save),
+          );
+          break;
+        case 'hash-compare':
+          console.log(
+            await hashCompareCommand(state.currentDir, input, hash, algorithm),
+          );
           break;
         case '.exit':
           rl.close();
