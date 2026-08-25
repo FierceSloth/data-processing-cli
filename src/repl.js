@@ -1,10 +1,12 @@
 import process from 'node:process';
 import readline from 'node:readline';
 import { countCommand } from './commands/count.js';
+import { csvToJsonCommand } from './commands/csvToJson.js';
 import { hashCommand } from './commands/hash.js';
+import { hashCompareCommand } from './commands/hashCompare.js';
+import { jsonToCsvCommand } from './commands/jsonToCsv.js';
 import { cdCommand, lsCommand, upCommand } from './navigation.js';
 import { argParser } from './utils/argParser.js';
-import { hashCompareCommand } from './commands/hashCompare.js';
 
 export function startRepl(state) {
   const rl = readline.createInterface({
@@ -23,30 +25,35 @@ export function startRepl(state) {
     }
 
     try {
-      const { input, algorithm, hash, save } = flags;
+      const { input, output, algorithm, hash, save } = flags;
+      const { currentDir } = state;
 
       switch (command) {
         case 'up':
-          state.currentDir = upCommand(state.currentDir);
+          state.currentDir = upCommand(currentDir);
           break;
         case 'cd':
-          state.currentDir = await cdCommand(state.currentDir, args[0]);
+          state.currentDir = await cdCommand(currentDir, args[0]);
           break;
         case 'ls':
-          console.log(await lsCommand(state.currentDir));
+          console.log(await lsCommand(currentDir));
           break;
         case 'count':
-          console.log(await countCommand(state.currentDir, input));
+          console.log(await countCommand(currentDir, input));
           break;
         case 'hash':
-          console.log(
-            await hashCommand(state.currentDir, input, algorithm, save),
-          );
+          console.log(await hashCommand(currentDir, input, algorithm, save));
           break;
         case 'hash-compare':
           console.log(
-            await hashCompareCommand(state.currentDir, input, hash, algorithm),
+            await hashCompareCommand(currentDir, input, hash, algorithm),
           );
+          break;
+        case 'csv-to-json':
+          await csvToJsonCommand(currentDir, input, output);
+          break;
+        case 'json-to-csv':
+          await jsonToCsvCommand(currentDir, input, output);
           break;
         case '.exit':
           rl.close();
