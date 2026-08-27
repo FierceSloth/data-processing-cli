@@ -2,6 +2,8 @@ import process from 'node:process';
 import readline from 'node:readline';
 import { countCommand } from './commands/count.js';
 import { csvToJsonCommand } from './commands/csvToJson.js';
+import { decryptCommand } from './commands/decrypt.js';
+import { encryptCommand } from './commands/encrypt.js';
 import { hashCommand } from './commands/hash.js';
 import { hashCompareCommand } from './commands/hashCompare.js';
 import { jsonToCsvCommand } from './commands/jsonToCsv.js';
@@ -25,7 +27,7 @@ export function startRepl(state) {
     }
 
     try {
-      const { input, output, algorithm, hash, save } = flags;
+      const { input, output, algorithm, hash, save, password } = flags;
       const { currentDir } = state;
 
       switch (command) {
@@ -54,6 +56,12 @@ export function startRepl(state) {
           break;
         case 'json-to-csv':
           await jsonToCsvCommand(currentDir, input, output);
+          break;
+        case 'encrypt':
+          await encryptCommand(currentDir, input, output, password);
+          break;
+        case 'decrypt':
+          await decryptCommand(currentDir, input, output, password);
           break;
         case '.exit':
           rl.close();
