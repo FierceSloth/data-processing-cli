@@ -9,6 +9,7 @@ import { hashCompareCommand } from './commands/hashCompare.js';
 import { jsonToCsvCommand } from './commands/jsonToCsv.js';
 import { cdCommand, lsCommand, upCommand } from './navigation.js';
 import { argParser } from './utils/argParser.js';
+import { logCommand } from './commands/logStats.js';
 
 export function startRepl(state) {
   const rl = readline.createInterface({
@@ -62,6 +63,9 @@ export function startRepl(state) {
           break;
         case 'decrypt':
           await decryptCommand(currentDir, input, output, password);
+          break;
+        case 'log-stats':
+          await logCommand(currentDir, input, output);
           break;
         case '.exit':
           rl.close();
